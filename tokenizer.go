@@ -28,7 +28,8 @@ func TokenizePro(text string) []*Token {
 	seg := segment.NewSegmenterDirect([]byte(text))
 	for seg.Segment() {
 		text := seg.Text()
-		if items, has := Contractions["eng"][strings.ToLower(text)]; has {
+		lowered := strings.ToLower(text)
+		if items, has := Contractions["eng"][lowered]; has {
 			pos := 0
 			for i, term := range items.Terms {
 				txt := text[pos : pos+len(term)]
@@ -40,7 +41,13 @@ func TokenizePro(text string) []*Token {
 				pos += len(term)
 			}
 		} else {
-			ret = append(ret, &Token{Text: text})
+			// https://en.wikipedia.org/wiki/English_possessive
+			if strings.HasSuffix(lowered, `'s`) {
+				ret = append(ret, &Token{Text: text[:len(text)-2]})
+				ret = append(ret, &Token{Text: text[len(text)-2:]})
+			} else {
+				ret = append(ret, &Token{Text: text})
+			}
 		}
 	}
 	return ret
