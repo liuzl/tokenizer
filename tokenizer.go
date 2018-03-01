@@ -3,7 +3,16 @@ package tokenizer
 import (
 	"fmt"
 	"github.com/liuzl/segment"
+	"regexp"
 	"strings"
+)
+
+const (
+	NumberWithUnitPattern = `^(\d*\.?\d+|\d{1,3}(?:,\d{3})+)([a-zA-Z]{1,3})$`
+)
+
+var (
+	NumberWithUnitRegex = regexp.MustCompile(NumberWithUnitPattern)
 )
 
 type Token struct {
@@ -46,6 +55,10 @@ func TokenizePro(text string) []*Token {
 		case strings.HasSuffix(lowered, `'s`):
 			ret = append(ret, &Token{Text: text[:len(text)-2]})
 			ret = append(ret, &Token{Text: text[len(text)-2:]})
+		case NumberWithUnitRegex.MatchString(text):
+			ss := NumberWithUnitRegex.FindStringSubmatch(text)
+			ret = append(ret, &Token{Text: ss[1]})
+			ret = append(ret, &Token{Text: ss[2]})
 		default:
 			ret = append(ret, &Token{Text: text})
 		}
