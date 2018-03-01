@@ -10,7 +10,7 @@ func TestTokenize(t *testing.T) {
 		`This is Zhanliang's book. the boys' books.`,
 		`自建房2樓3室2廳1衛1廚92.00㎡戶型圖，2,123km到北京`,
 		`自建房2樓3室2廳1衛1廚92.00㎡戶型圖，92km到北京`,
-		`自建房2樓3室2廳1衛1廚92.00㎡戶型圖，92.54km到北京`,
+		`自建房2樓3室2廳1衛1廚92.00㎡戶型圖，+92.54km到北京`,
 	}
 	for _, c := range cases {
 		ret := Tokenize(c)
