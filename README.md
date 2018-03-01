@@ -25,5 +25,6 @@ func main() {
 1. Segment UTF-8 string as described at [Unicode Standard Annex #29](http://www.unicode.org/reports/tr29/).
 2. Deal with [English contractions](https://en.wikipedia.org/wiki/Wikipedia:List_of_English_contractions).
 3. Deal with English possessives.
+4. Deal with Numbers with unit.
 ## Licence
 This package is licenced under the Apache License 2.0.
