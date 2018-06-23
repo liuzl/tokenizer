@@ -1,6 +1,7 @@
 package tokenizer
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -11,9 +12,17 @@ func TestTokenize(t *testing.T) {
 		`自建房2樓3室2廳1衛1廚92.00㎡戶型圖，2,123km到北京`,
 		`自建房2樓3室2廳1衛1廚92.00㎡戶型圖，92km到北京`,
 		`自建房2樓3室2廳1衛1廚92.00㎡戶型圖，+92.54km到北京`,
+		`山西省煤炭地质１４８勘查院煤层气工程处`,
 	}
 	for _, c := range cases {
-		ret := Tokenize(c)
-		t.Log(ret)
+		ret := TokenizePro(c)
+		var words []string
+		var norms []string
+		for _, term := range ret {
+			words = append(words, term.Text)
+			norms = append(norms, term.Norm)
+		}
+		t.Log(strings.Join(words, "/"))
+		t.Log(strings.Join(norms, "/"))
 	}
 }
