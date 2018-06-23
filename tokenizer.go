@@ -64,8 +64,6 @@ func TokenizePro(text string) []*Token {
 	}
 	// full to half
 	ntext := replacer.Replace(width.Narrow.String(res))
-	fmt.Println(text, len([]rune(text)))
-	fmt.Println(ntext, len([]rune(ntext)))
 
 	runes := []rune(text)
 
