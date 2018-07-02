@@ -58,16 +58,10 @@ func Tokenize(text string) []string {
 }
 
 func TokenizePro(text string) []*Token {
-	res, _, err := transform.String(trans, text)
-	if err != nil {
-		return nil
-	}
-	// full to half
-	ntext := replacer.Replace(width.Narrow.String(res))
-
 	runes := []rune(text)
 
 	var ret []*Token
+	ntext := replacer.Replace(width.Narrow.String(text)) // full to half
 	seg := segment.NewSegmenterDirect([]byte(ntext))
 	p := 0
 	for seg.Segment() {
@@ -77,14 +71,16 @@ func TokenizePro(text string) []*Token {
 		raw := runes[p : p+length]
 		p += length
 
-		lowered := strings.ToLower(token)
+		lowered, _, err := transform.String(trans, strings.ToLower(token))
+		if err != nil {
+			return nil
+		}
 		items, has := Contractions["eng"][lowered]
 		switch {
 		case has: // deal with contractions
 			pos := 0
 			for i, term := range items.Terms {
 				rterm := []rune(term)
-				//txt := token[pos : pos+len(term)]
 				txt := raw[pos : pos+len(rterm)]
 				norm := string(rtoken[pos : pos+len(rterm)])
 				if len(items.Norms) > 0 {
@@ -105,7 +101,7 @@ func TokenizePro(text string) []*Token {
 			ret = append(ret, &Token{Text: string(raw[:j]), Norm: ss[1]})
 			ret = append(ret, &Token{Text: string(raw[j:]), Norm: ss[2]})
 		default:
-			ret = append(ret, &Token{Text: string(raw), Norm: token})
+			ret = append(ret, &Token{Text: string(raw), Norm: lowered})
 		}
 	}
 	return ret
