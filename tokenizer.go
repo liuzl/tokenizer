@@ -71,10 +71,13 @@ func TokenizePro(text string) []*Token {
 		raw := runes[p : p+length]
 		p += length
 
-		lowered, _, err := transform.String(trans, strings.ToLower(token))
-		if err != nil {
-			return nil
-		}
+		/*
+			lowered, _, err := transform.String(trans, strings.ToLower(token))
+			if err != nil {
+				return nil
+			}
+		*/
+		lowered := strings.ToLower(token)
 		items, has := Contractions["eng"][lowered]
 		switch {
 		case has: // deal with contractions
