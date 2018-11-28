@@ -16,6 +16,8 @@ func TestTokenize(t *testing.T) {
 		`北京ทันทุกเหตุการ有限公司`,
 		`23:45:31.965.805`,
 		`23:45:31.965.805cm`,
+		`pada 2018-06-30 23:45:31.965805 +7:00. Saldo`,
+		`2008-09-15T15:53:00 +04:30`,
 	}
 	for _, c := range cases {
 		ret := TokenizePro(c)

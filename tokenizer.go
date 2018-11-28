@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	NumberWithUnitPattern = `^(\d*\.?\d+|\d{1,3}(?:,\d{3})+)([a-zA-Z]{1,3})$`
-	NumberWithUnitRegex   = regexp.MustCompile(NumberWithUnitPattern)
+	NumberWithUnitRegex = regexp.MustCompile(`^(\d*\.?\d+|\d{1,3}(?:,\d{3})+)([a-zA-Z]{1,3})$`)
+	TimeFixRegex        = regexp.MustCompile(`(?i)^(?:\d|[0-3]\d)T(?:\d|[0-2]\d)$`)
 
 	trans = transform.Chain(
 		norm.NFD,
@@ -103,6 +103,11 @@ func TokenizePro(text string) []*Token {
 			j := len([]rune(ss[1]))
 			ret = append(ret, &Token{Text: string(raw[:j]), Norm: ss[1]})
 			ret = append(ret, &Token{Text: string(raw[j:]), Norm: ss[2]})
+		case TimeFixRegex.MatchString(token):
+			j := strings.Index(lowered, "t")
+			ret = append(ret, &Token{Text: string(raw[:j]), Norm: lowered[:j]})
+			ret = append(ret, &Token{Text: string(raw[j]), Norm: string(lowered[j])})
+			ret = append(ret, &Token{Text: string(raw[j+1:]), Norm: lowered[j+1:]})
 		default:
 			ret = append(ret, &Token{Text: string(raw), Norm: lowered})
 		}
